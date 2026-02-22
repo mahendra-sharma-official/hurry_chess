@@ -5,13 +5,19 @@ MoveStorage::MoveStorage()
 {
 }
 
-std::vector<Square> MoveStorage::GetRawMovesOf(PieceType pieceType)
+std::vector<Square>& MoveStorage::GetRawMovesOf(PieceType pieceType)
 {
     return m_moves[pieceType];
 }
 
 void MoveStorage::SetAllMoves()
 {
+    SetPawnMoves();
+    SetKnightMoves();
+    SetBishopMoves();
+    SetRookMoves();
+    SetQueenMoves();
+    SetKingMoves();
 }
 
 void MoveStorage::SetPawnMoves()
@@ -103,6 +109,8 @@ void MoveStorage::SetQueenMoves()
         queen_moves.emplace_back(i, -i);   // to bottom left
     }
 
+    m_moves[PieceType::QUEEN] = queen_moves;
+
 }
 
 void MoveStorage::SetKingMoves()
@@ -121,4 +129,6 @@ void MoveStorage::SetKingMoves()
     king_moves.emplace_back(-1, -1); // to top left 
     king_moves.emplace_back(1, 1);   // to bottom right
     king_moves.emplace_back(1, -1);  // to bottom left
+
+    m_moves[PieceType::KING] = king_moves;
 }

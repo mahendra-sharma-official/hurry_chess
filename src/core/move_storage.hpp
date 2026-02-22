@@ -16,12 +16,12 @@ private:
 
 public:
     MoveStorage();
-    std::vector<Square> GetRawMovesOf(PieceType pieceType);
+    std::vector<Square>& GetRawMovesOf(PieceType pieceType);
+    void SetAllMoves();
 
 private:
 
     // Raw moves from {0, 0} 
-    void SetAllMoves();
     void SetPawnMoves();
     void SetKnightMoves();
     void SetBishopMoves();
