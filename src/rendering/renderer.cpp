@@ -9,7 +9,7 @@ Renderer::Renderer(sf::RenderWindow& window, TextureManager& textures)
 }
 
 
-
+/// RENDERS WHOLE APPLICATION / GAME
 void Renderer::Render(GameState& state)
 {
     std::optional<Square>& selected = state.GetSelectedSquare();
@@ -26,6 +26,8 @@ void Renderer::Render(GameState& state)
     m_window.display();
 }
 
+
+/// UPDATES VIEW BASED ON CURRENT WINDOW SIZE (NEEDED WHEN RESIZING)
 void Renderer::UpdateViews(sf::Vector2u windowSize)
 {
     sf::Vector2f window_size = static_cast<sf::Vector2f>(windowSize);
@@ -49,6 +51,8 @@ void Renderer::UpdateViews(sf::Vector2u windowSize)
     m_window.setView(m_view);
 }
 
+
+/// CONVERTS MOUSE SCREEN COORDINATES TO SQUARE INDEX
 Square Renderer::ScreenToSquare(sf::Vector2i mousePos) const
 {
     sf::Vector2f world = ScreenToWorld(mousePos);
@@ -67,12 +71,16 @@ Square Renderer::ScreenToSquare(sf::Vector2i mousePos) const
     return { row, col };
 }
 
+
+/// CONVERTS MOUSE SCREEN COORDINATES TO WORLD(VIEW) COORDINATES
 sf::Vector2f Renderer::ScreenToWorld(sf::Vector2i mousePos) const
 {
     sf::Vector2f world = m_window.mapPixelToCoords(mousePos, m_view);
     return world;
 }
 
+
+/// DRAWS THE BOARD (RECTANGLES)
 void Renderer::DrawBoard()
 {
     for(int row = 0; row < 8; row++)
@@ -90,6 +98,8 @@ void Renderer::DrawBoard()
     }
 }
 
+
+/// DRAWS THE PIECES (SPRITES, ORIGIN AT CENTER OF SPRITE)
 void Renderer::DrawPieces(const Board& board)
 {
     for(int row = 0; row < 8; row++)
@@ -116,6 +126,8 @@ void Renderer::DrawPieces(const Board& board)
     }
 }
 
+
+/// DRAW HIGHLIGHTS TO THE GIVEN SQUARES (GENERALLY FOR LEGAL MOVES)
 void Renderer::DrawHighlights(const std::vector<Square>& squares)
 {
     for(const Square& sq : squares)
@@ -135,6 +147,8 @@ void Renderer::DrawHighlights(const std::vector<Square>& squares)
     }
 }
 
+
+/// DRAWS THE SELECTED SQUARE (I.E HIGHLIGHTS WITH A COLOR)
 void Renderer::DrawSelectedSquare(std::optional<Square> selected)
 {
     if(!selected.has_value())
@@ -148,6 +162,7 @@ void Renderer::DrawSelectedSquare(std::optional<Square> selected)
 }
 
 
+/// DRAWS ALL THE HUD COMPONENTS
 void Renderer::DrawHUD(const GameState& state)
 {
     DrawTopBar(state);
@@ -155,6 +170,8 @@ void Renderer::DrawHUD(const GameState& state)
     DrawSidePanels(state);
 }
 
+
+/// DRAW TOP BAR ALONG WITH WHAT IT CONTAINS
 void Renderer::DrawTopBar(const GameState& state)
 {
     // top bar region: x: 0–VIRTUAL_SIZE, y: 0–PADDING
@@ -165,6 +182,8 @@ void Renderer::DrawTopBar(const GameState& state)
     m_window.draw(bar);
 }
 
+
+/// DRAW BOTTOM BAR ALONG WITH WHAT IT CONTAINS
 void Renderer::DrawBottomBar(const GameState& state)
 {
     // bottom bar region: x: 0–VIRTUAL_SIZE, y: PADDING+BOARD_SIZE–VIRTUAL_SIZE
@@ -175,6 +194,8 @@ void Renderer::DrawBottomBar(const GameState& state)
     m_window.draw(bar);
 }
 
+
+/// DRAW SIDE (LEFT AND RIGHT) PANELS
 void Renderer::DrawSidePanels(const GameState& state)
 {
     // left panel: x: 0–PADDING, y: PADDING–PADDING+BOARD_SIZE
@@ -192,12 +213,16 @@ void Renderer::DrawSidePanels(const GameState& state)
     m_window.draw(right);
 }
 
+
+/// GET THE COLOR OF THE TILE DEPENDING ON THE SQUARE
 sf::Color Renderer::GetTileColor(Square sq) const
 {
     bool isLight = (sq.row + sq.col) % 2 == 0;
     return isLight ? LIGHT_COLOR : DARK_COLOR;
 }
 
+
+/// GET THE BOUNDING BOX (POSITION, SIZE) OF THE SQUARE
 sf::FloatRect Renderer::GetSquareBounds(Square sq) const
 {
     return {
@@ -206,6 +231,8 @@ sf::FloatRect Renderer::GetSquareBounds(Square sq) const
     };
 }
 
+
+/// GET THE BOUNDING BOX (POSITION, SIZE) OF SPRITE WITHIN THE TEXTURE (SPECIFICALLY FOR A PIECE)
 sf::IntRect Renderer::GetPieceTextureRect(Piece piece) const
 {
     sf::Vector2u spriteSize = m_textures.GetSpriteSize("pieces");

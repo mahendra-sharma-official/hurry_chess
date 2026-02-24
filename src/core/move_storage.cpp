@@ -75,15 +75,16 @@ void MoveStorage::SetKnightMoves()
 void MoveStorage::SetBishopMoves()
 {
     std::vector<Square> bishop_moves;
-    bishop_moves.reserve(28);
+    bishop_moves.resize(28);
 
     // diagonal moves
     for(int i = 1; i < 8; i++)
     {
-        bishop_moves.emplace_back(-i, i);   // to top right 
-        bishop_moves.emplace_back(-i, -i);  // to top left 
-        bishop_moves.emplace_back(i, i);    // to bottom right 
-        bishop_moves.emplace_back(i, -i);   // to bottom left
+        int j = i - 1;
+        bishop_moves[j] = { -i, i };      // to top right 
+        bishop_moves[7 + j] = { -i, -i }; // to top left 
+        bishop_moves[14 + j] = { i, -i }; // to bottom left
+        bishop_moves[21 + j] = { i, i };  // to bottom right 
     }
 
     m_moves[PieceType::BISHOP] = bishop_moves;
@@ -97,15 +98,16 @@ void MoveStorage::SetBishopMoves()
 void MoveStorage::SetRookMoves()
 {
     std::vector<Square> rook_moves;
-    rook_moves.reserve(28);
+    rook_moves.resize(28);
 
     // straight moves
     for(int i = 1; i < 8; i++)
     {
-        rook_moves.emplace_back(-i, 0); // to top 
-        rook_moves.emplace_back(i, 0);  // to bottom
-        rook_moves.emplace_back(0, i);  // to right 
-        rook_moves.emplace_back(0, -i); // to left 
+        int j = i - 1;
+        rook_moves[j] = { 0, i };       // to right 
+        rook_moves[7 + j] = { -i, 0 };  // to top 
+        rook_moves[14 + j] = { 0, -i }; // to left
+        rook_moves[21 + j] = { i, 0 };  // to bottom 
     }
 
     m_moves[PieceType::ROOK] = rook_moves;
@@ -118,22 +120,23 @@ void MoveStorage::SetRookMoves()
 void MoveStorage::SetQueenMoves()
 {
     std::vector<Square> queen_moves;
-    queen_moves.reserve(56);
+    queen_moves.resize(56);
 
 
     for(int i = 1; i < 8; i++)
     {
+        int j = i - 1;
         // straight moves
-        queen_moves.emplace_back(-i, 0); // to top 
-        queen_moves.emplace_back(i, 0);  // to bottom
-        queen_moves.emplace_back(0, i);  // to right 
-        queen_moves.emplace_back(0, -i); // to left 
+        queen_moves[j] = { -i,0 };      // to top 
+        queen_moves[7 + j] = { i, 0 };  // to bottom
+        queen_moves[14 + j] = { 0, i }; // to right 
+        queen_moves[21 + j] = { 0,-i }; // to left 
 
-        // diagonal moves
-        queen_moves.emplace_back(-i, i);   // to top right 
-        queen_moves.emplace_back(-i, -i);  // to top left 
-        queen_moves.emplace_back(i, i);    // to bottom right 
-        queen_moves.emplace_back(i, -i);   // to bottom left
+        // diagonal moves  
+        queen_moves[28 + j] = { -i, i };    // to top right 
+        queen_moves[35 + j] = { -i, -i };   // to top left 
+        queen_moves[42 + j] = { i, -i };    // to bottom left
+        queen_moves[49 + j] = { i, i };     // to bottom right 
     }
 
     m_moves[PieceType::QUEEN] = queen_moves;

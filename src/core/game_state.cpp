@@ -8,77 +8,104 @@ GameState::GameState()
 }
 
 
-
 /// CHECKS IF DOING A MOVE IS VALID
 bool GameState::TryMove(Square from, Square to)
 {
     return false;
 }
 
+
+/// RESET THE GAME STATE
 void GameState::Reset()
 {
 }
 
+
+/// GETS CURRENT TURN (COLOR)
 Color GameState::GetCurrentTurn() const
 {
     return m_currentTurn;
 }
 
+
+/// GET GAME'S CURRENT STATUS
 GameStatus GameState::GetGameStatus() const
 {
     return m_gameStatus;
 }
 
+
+/// GET BOARD'S CURRENT STATUS
 BoardStatus GameState::GetBoardStatus() const
 {
     return m_boardStatus;
 }
 
+
+/// GET REFERENCE TO BOARD
 const Board& GameState::GetBoard() const
 {
     return m_board;
 }
 
+
+/// GET SUCCESSFUL MOVES' MOVE HISTORY 
 const std::vector<Move>& GameState::GetMoveHistory() const
 {
     return m_moveHistory;
 }
 
+
+/// GET PLAYABLE VALID MOVES FROM A SQUARE
 std::vector<Square> GameState::GetLegalMoves(Square from) const
 {
     return m_validator.GetLegalMoves(from);
 }
 
+
+/// GET THE SELECTED SQUARE (OPTIONAL)
 std::optional<Square> GameState::GetSelectedSquare() const
 {
     return m_selected;
 }
 
+
+/// GET THE PREVIOUSLY CACHED LEGAL MOVES 
 std::vector<Square> GameState::GetCachedLegalMoves() const
 {
     return m_legalMoves;
 }
 
+
+/// SET THE GAME'S STATUS 
 void GameState::SetGameStatus(GameStatus status)
 {
     m_gameStatus = status;
 }
 
-void GameState::SetLegalMoves(std::vector<Square> moves)
+
+/// SET THE LEGAL MOVES (CACHED)
+void GameState::SetCachedLegalMoves(std::vector<Square> moves)
 {
     m_legalMoves = moves;
 }
 
+
+/// SET THE CACHED SELECTED SQUARE
 void GameState::SetSelectedSquare(std::optional<Square> selected)
 {
     m_selected = selected;
 }
 
+
+/// SWITCH THE TURN TO OPPOSITE OF CURRENT TURN
 void GameState::SwitchTurn()
 {
     m_currentTurn = (m_currentTurn == Color::WHITE ? Color::BLACK : Color::WHITE);
 }
 
+
+/// UPDATES THE STATUS DEPENDING ON THE CURRENT GAME STATE
 void GameState::UpdateStatus()
 {
 

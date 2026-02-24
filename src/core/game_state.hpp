@@ -52,10 +52,10 @@ public:
 
 
     void SetGameStatus(GameStatus status);
-    void SetLegalMoves(std::vector<Square> moves);
+    void SetCachedLegalMoves(std::vector<Square> moves);
     void SetSelectedSquare(std::optional<Square> selected);
 
-private:
     void SwitchTurn();
     void UpdateStatus();
+
 };

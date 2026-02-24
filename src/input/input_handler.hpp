@@ -10,6 +10,7 @@ public:
     InputHandler(GameState& state, Renderer& renderer);
 
     void HandleEvent(const sf::Event& event);
+    void HandleSelection(Square selected);
 
 private:
     GameState& m_state;
