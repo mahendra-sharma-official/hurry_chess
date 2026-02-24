@@ -1,13 +1,10 @@
 #pragma once
+#include "square.hpp"
 #include <unordered_map>   
 
 enum class PieceType;
 struct Piece;
 
-struct Square
-{
-    int row, col;
-};
 
 class MoveStorage
 {
@@ -16,7 +13,7 @@ private:
 
 public:
     MoveStorage();
-    std::vector<Square>& GetRawMovesOf(PieceType pieceType);
+    const std::vector<Square>& GetRawMovesOf(PieceType pieceType) const;
     void SetAllMoves();
 
 private:

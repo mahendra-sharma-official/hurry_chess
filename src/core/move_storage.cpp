@@ -1,15 +1,23 @@
 #include "core/move_storage.hpp"
 #include "core/piece.hpp"
 
+
+/// CONSTRUCTOR (DOES NOTHING)
 MoveStorage::MoveStorage()
 {
 }
 
-std::vector<Square>& MoveStorage::GetRawMovesOf(PieceType pieceType)
+
+
+/// GETS RAW (ALL POSSIBLE, INVALID ALSO) MOVES RELATIVE TO PIECE BEING AT {0,0} 
+const std::vector<Square>& MoveStorage::GetRawMovesOf(PieceType pieceType) const
 {
-    return m_moves[pieceType];
+    return m_moves.at(pieceType);
 }
 
+
+
+/// SETS AND STORES ALL PIECES MOVES
 void MoveStorage::SetAllMoves()
 {
     SetPawnMoves();
@@ -20,6 +28,9 @@ void MoveStorage::SetAllMoves()
     SetKingMoves();
 }
 
+
+
+/// SETS PAWN MOVE
 void MoveStorage::SetPawnMoves()
 {
     std::vector<Square> pawn_moves;
@@ -30,6 +41,10 @@ void MoveStorage::SetPawnMoves()
     m_moves[PieceType::PAWN] = pawn_moves;
 }
 
+
+
+
+/// SETS KNIGHT MOVES
 void MoveStorage::SetKnightMoves()
 {
     std::vector<Square> knight_moves;
@@ -53,6 +68,10 @@ void MoveStorage::SetKnightMoves()
 
 }
 
+
+
+
+/// SETS BISHOP MOVES
 void MoveStorage::SetBishopMoves()
 {
     std::vector<Square> bishop_moves;
@@ -71,6 +90,10 @@ void MoveStorage::SetBishopMoves()
 
 }
 
+
+
+
+/// SETS ROOK MOVES
 void MoveStorage::SetRookMoves()
 {
     std::vector<Square> rook_moves;
@@ -88,6 +111,10 @@ void MoveStorage::SetRookMoves()
     m_moves[PieceType::ROOK] = rook_moves;
 }
 
+
+
+
+/// SETS QUEEN MOVES
 void MoveStorage::SetQueenMoves()
 {
     std::vector<Square> queen_moves;
@@ -113,6 +140,10 @@ void MoveStorage::SetQueenMoves()
 
 }
 
+
+
+
+/// SETS KING MOVES
 void MoveStorage::SetKingMoves()
 {
     std::vector<Square> king_moves;

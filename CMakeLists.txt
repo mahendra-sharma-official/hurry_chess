@@ -19,7 +19,8 @@ endif()
 # SFML (Dynamic) 
 set(SFML_STATIC_LIBRARIES FALSE)
 set(SFML_DIR "C:/Personal/Development/LIBRARIES/SFML-3.0.2/lib/cmake/SFML")
-find_package(SFML 3.0.2 REQUIRED COMPONENTS Graphics)
+find_package(SFML 3.0.2 REQUIRED COMPONENTS Graphics Window System)
+
 
 # Sources
 file(GLOB_RECURSE SRC_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
@@ -27,7 +28,7 @@ set(SRC_INCLUDES_DIR "${CMAKE_SOURCE_DIR}/src/")
 
 add_executable(app ${SRC_FILES})
 target_include_directories(app PRIVATE ${SRC_INCLUDES_DIR})
-target_link_libraries(app PRIVATE SFML::Graphics)
+target_link_libraries(app PRIVATE SFML::Graphics SFML::Window SFML::System)
 
 # All configs go into a 'game' folder inside the build directory
 set(GAME_OUTPUT_DIR "${CMAKE_BINARY_DIR}/game")
@@ -73,18 +74,27 @@ set_property(TARGET app PROPERTY
 
 # Copy dlls (SFML)
 set(SFML_DLL_DIR "${SFML_DIR}/../../../bin")
+# Copy DLLs — Debug
 add_custom_command(TARGET app POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    COMMAND $<$<CONFIG:Debug>:${CMAKE_COMMAND}> $<$<CONFIG:Debug>:-E>
+        $<$<CONFIG:Debug>:copy_if_different>
         $<$<CONFIG:Debug>:${SFML_DLL_DIR}/sfml-graphics-d-3.dll>
         $<$<CONFIG:Debug>:${SFML_DLL_DIR}/sfml-window-d-3.dll>
         $<$<CONFIG:Debug>:${SFML_DLL_DIR}/sfml-system-d-3.dll>
-        $<$<CONFIG:Release>:${SFML_DLL_DIR}/sfml-graphics-3.dll>
-        $<$<CONFIG:Release>:${SFML_DLL_DIR}/sfml-window-3.dll>
-        $<$<CONFIG:Release>:${SFML_DLL_DIR}/sfml-system-3.dll>
-        "${GAME_OUTPUT_DIR}"
+        $<$<CONFIG:Debug>:${GAME_OUTPUT_DIR}>
     COMMAND_EXPAND_LISTS
 )
 
+# Copy DLLs — Release
+add_custom_command(TARGET app POST_BUILD
+    COMMAND $<$<CONFIG:Release>:${CMAKE_COMMAND}> $<$<CONFIG:Release>:-E>
+        $<$<CONFIG:Release>:copy_if_different>
+        $<$<CONFIG:Release>:${SFML_DLL_DIR}/sfml-graphics-3.dll>
+        $<$<CONFIG:Release>:${SFML_DLL_DIR}/sfml-window-3.dll>
+        $<$<CONFIG:Release>:${SFML_DLL_DIR}/sfml-system-3.dll>
+        $<$<CONFIG:Release>:${GAME_OUTPUT_DIR}>
+    COMMAND_EXPAND_LISTS
+)
 
 # Copy resources 
 add_custom_command(TARGET app POST_BUILD

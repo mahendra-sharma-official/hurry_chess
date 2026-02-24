@@ -7,22 +7,44 @@
 class Renderer
 {
 public:
-  Renderer(sf::RenderWindow& window, TextureManager& textures);
+    Renderer(sf::RenderWindow& window, TextureManager& textures);
 
-  void DrawBoard();
-  void DrawPieces(const Board& board);
-  void DrawHighlights(const std::vector<Square>& squares);
-  void DrawSelectedSquare(Square sq);
-  void Render(const GameState& state, std::optional<Square> selected);
+    void Render(GameState& state);
+    void UpdateViews(sf::Vector2u windowSize);
 
-  Square ScreenToSquare(sf::Vector2i mousePos) const;
+    // coordinate conversion
+    Square ScreenToSquare(sf::Vector2i mousePos) const;
+    sf::Vector2f ScreenToWorld(sf::Vector2i mousePos) const;
 
 private:
-  sf::RenderWindow& m_window;
-  TextureManager& m_textures;
+    sf::RenderWindow& m_window;
+    TextureManager& m_textures;
 
-  static constexpr float TILE_SIZE = 80.f;
+    sf::View m_view;
 
-  sf::Color GetTileColor(Square sq) const;
-  sf::FloatRect GetSquareBounds(Square sq) const;
+    static constexpr float TILE_SIZE = 64.f;
+    static constexpr float BOARD_SIZE = TILE_SIZE * 8;
+    static constexpr float PADDING = TILE_SIZE;
+    static constexpr float VIRTUAL_SIZE = BOARD_SIZE + PADDING * 2;
+    static constexpr float SCALE_FACTOR = 0.95;
+    static constexpr sf::Color LIGHT_COLOR = sf::Color(240, 217, 181);
+    static constexpr sf::Color DARK_COLOR = sf::Color(181, 136, 99);
+
+
+    // board drawing
+    void DrawBoard();
+    void DrawPieces(const Board& board);
+    void DrawHighlights(const std::vector<Square>& squares);
+    void DrawSelectedSquare(std::optional<Square> selected);
+
+    // hud drawing
+    void DrawHUD(const GameState& state);
+    void DrawTopBar(const GameState& state);
+    void DrawBottomBar(const GameState& state);
+    void DrawSidePanels(const GameState& state);
+
+    // helpers
+    sf::Color GetTileColor(Square sq) const;
+    sf::FloatRect GetSquareBounds(Square sq) const;
+    sf::IntRect GetPieceTextureRect(Piece piece) const;
 };

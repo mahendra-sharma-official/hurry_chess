@@ -22,7 +22,7 @@ public:
 
 private:
 
-    std::vector<Square> GetRawMoves(Square from);
+    std::vector<Square> GetRawMoves(Square from) const;
     bool DoesLeaveKingInCheck(Square from, Square to) const;
     Square FindKing(Color color) const;
 };

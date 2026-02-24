@@ -1,20 +1,32 @@
-#include "board.hpp"
+#include "core/board.hpp"
 
+/// CONSTRUCTOR
 Board::Board()
 {
+    m_grid.fill({ PieceType::NONE, Color::NONE });
     PlaceStartingPieces();
 }
 
+
+
+/// RESETS THE BOARD TO INITIAL STATE
 void Board::Reset()
 {
+    m_grid.fill({ PieceType::NONE, Color::NONE });
     PlaceStartingPieces();
 }
 
+
+
+/// GET THE PIECE AT THE SQUARE
 Piece Board::GetPiece(Square sq) const
 {
     return m_grid[sq.row][sq.col];
 }
 
+
+
+/// SET THE PIECE AT THE SQUARE
 void Board::SetPiece(Square sq, Piece piece)
 {
     m_grid[sq.row][sq.col] = piece;
@@ -34,23 +46,27 @@ bool Board::IsInsideBounds(Square sq) const
     return is_inside_row && is_inside_col;
 }
 
+
+
+/// PLACE THE BOARD PIECES TO STARTING POSITION 
+
 void Board::PlaceStartingPieces()
 {
-    // Order to place the pieces in (left to right)
+    // order to place the pieces in (left to right)
     PieceType piece_order[8] =
     {
         PieceType::ROOK, PieceType::KNIGHT, PieceType::BISHOP, PieceType::QUEEN,
         PieceType::KING, PieceType::BISHOP, PieceType::KNIGHT, PieceType::ROOK
     };
 
-    // Setting pieces 
+    // setting pieces 
     for(int i = 0; i < 8; i++)
     {
-        // Black
+        // black
         SetPiece({ 0, i }, { piece_order[i], Color::BLACK });   // back rank
         SetPiece({ 1, i }, { PieceType::PAWN, Color::BLACK });  // pawns 
 
-        // White
+        // white
         SetPiece({ 7, i }, { piece_order[i], Color::WHITE });   // back rank
         SetPiece({ 6, i }, { PieceType::PAWN, Color::WHITE });  // pawns 
     }

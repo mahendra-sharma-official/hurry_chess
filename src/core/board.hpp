@@ -1,11 +1,8 @@
 #pragma once
 #include "piece.hpp"
+#include "square.hpp"
 #include <array>
 
-struct Square
-{
-    int row, col;
-};
 
 class Board
 {

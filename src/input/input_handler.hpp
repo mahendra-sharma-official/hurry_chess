@@ -7,15 +7,13 @@
 class InputHandler
 {
 public:
-  InputHandler(GameState& state, Renderer& renderer);
+    InputHandler(GameState& state, Renderer& renderer);
 
-  void HandleEvent(const sf::Event& event);
-  std::optional<Square> GetSelectedSquare() const;
+    void HandleEvent(const sf::Event& event);
 
 private:
-  GameState& m_state;
-  Renderer& m_renderer;
-  std::optional<Square> m_selected;
+    GameState& m_state;
+    Renderer& m_renderer;
 
-  void HandleClick(sf::Vector2i mousePos);
+    void HandleClick(sf::Vector2i mousePos);
 };

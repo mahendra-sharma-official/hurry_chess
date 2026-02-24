@@ -1,9 +1,8 @@
 #pragma once
-#include <utility> // std::pair
 
 enum class PieceType
 {
-    NONE, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
+    NONE, ROOK, KNIGHT, BISHOP, QUEEN, KING, PAWN
 };
 enum class Color
 {
