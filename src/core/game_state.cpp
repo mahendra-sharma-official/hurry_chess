@@ -14,7 +14,6 @@ void GameState::DoMove(Square from, Square to)
     m_board.MovePiece(from, to);
     SetSelectedSquare(std::nullopt);
     SetCachedLegalMoves({});
-    SwitchTurn();
 }
 
 

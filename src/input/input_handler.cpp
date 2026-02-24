@@ -91,7 +91,7 @@ void InputHandler::HandleSelection(Square clicked)
         if(clicked.row == lm.row && clicked.col == lm.col)
         {
             m_state.DoMove(from, lm);
-
+            m_state.SwitchTurn();
             break;
         }
     }

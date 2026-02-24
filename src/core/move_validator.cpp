@@ -26,10 +26,38 @@ std::vector<Square> MoveValidator::GetLegalMoves(Square from) const
     std::vector<Square> legal_moves;
     legal_moves.reserve(raw_moves.size());
 
-    // handle black pawn separately
-    if(type == PieceType::PAWN && m_board.GetPiece(from).color == Color::BLACK)
+    // handle pawn separately
+    if(type == PieceType::PAWN)
     {
-        legal_moves.emplace_back(2 + raw_moves[0].row, raw_moves[0].col); // down
+        int basic_dir = m_board.GetPiece(from).color == Color::BLACK ? 1 : 0;
+
+        for(Square& rm : raw_moves)
+        {
+            Square actual_rm = { rm.row + 2 * basic_dir, rm.col };
+            // if not inside bounds then don't check anything else
+            if(!m_board.IsInsideBounds(actual_rm))
+            {
+
+            }
+            // if the piece in front is not empty then it is invalid
+            else if(m_board.GetPiece(actual_rm).type != PieceType::NONE
+                    && actual_rm.col == from.col)
+            {
+
+            }
+            // if the piece in front is empty then it is valid
+            else if(m_board.GetPiece(actual_rm).type == PieceType::NONE)
+            {
+                if(actual_rm.col == from.col)
+                    legal_moves.emplace_back(actual_rm);
+            }
+            // if the enemy piece on side are available then they are also valid
+            else if(m_board.GetPiece(from).color != m_board.GetPiece(actual_rm).color)
+            {
+                legal_moves.emplace_back(actual_rm);
+
+            }
+        }
     }
     // rook, king just needs to check if it is ally or enemy
     else if(can_skip)

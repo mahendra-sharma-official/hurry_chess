@@ -32,7 +32,10 @@ void Game::ProcessEvents()
     while(const std::optional<sf::Event> event = m_window.pollEvent())
     {
         if(event->is<sf::Event::Closed>())
+        {
             m_window.close();
+            m_state.SetGameStatus(GameStatus::ENDING);
+        }
         if(const auto* resized = event->getIf<sf::Event::Resized>())
             m_renderer.UpdateViews(resized->size);
 

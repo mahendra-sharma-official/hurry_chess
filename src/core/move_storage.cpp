@@ -34,10 +34,11 @@ void MoveStorage::SetAllMoves()
 void MoveStorage::SetPawnMoves()
 {
     std::vector<Square> pawn_moves;
-
+    pawn_moves.reserve(3);
     // 1 move upward
-    pawn_moves.emplace_back(-1, 0);
-
+    pawn_moves.emplace_back(-1, 1);    // right
+    pawn_moves.emplace_back(-1, 0);     // forward
+    pawn_moves.emplace_back(-1, -1);     // left
     m_moves[PieceType::PAWN] = pawn_moves;
 }
 
