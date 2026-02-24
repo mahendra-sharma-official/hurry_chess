@@ -37,7 +37,7 @@ void InputHandler::HandleClick(sf::Vector2i mousePos)
         return;
 
     // move logic here
-    // (NOT YET IMPLEMENTED)
+
 
     // clear selection after clicking somewhere else
     m_state.SetSelectedSquare(std::nullopt);
@@ -67,7 +67,7 @@ void InputHandler::HandleSelection(Square clicked)
 
     Square from = selected.value();
 
-    // clicked the same square then deselect
+    // clicked the same square, deselect
     if(clicked.row == from.row && clicked.col == from.col)
     {
         m_state.SetSelectedSquare(std::nullopt);
@@ -83,5 +83,16 @@ void InputHandler::HandleSelection(Square clicked)
         m_state.SetSelectedSquare(clicked);
         m_state.SetCachedLegalMoves(m_state.GetLegalMoves(clicked));
         return;
+    }
+
+    // clicked on a legal move
+    for(const Square& lm : m_state.GetCachedLegalMoves())
+    {
+        if(clicked.row == lm.row && clicked.col == lm.col)
+        {
+            m_state.DoMove(from, lm);
+
+            break;
+        }
     }
 }

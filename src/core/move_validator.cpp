@@ -38,6 +38,10 @@ std::vector<Square> MoveValidator::GetLegalMoves(Square from) const
         {
             if(IsLegalMove(from, rm))
                 legal_moves.emplace_back(rm);
+            else if(!m_board.IsInsideBounds(rm))
+            {
+
+            }
             else if(m_board.GetPiece(from).color != m_board.GetPiece(rm).color)
                 legal_moves.emplace_back(rm);
         }
@@ -52,6 +56,9 @@ std::vector<Square> MoveValidator::GetLegalMoves(Square from) const
                 Square rm = raw_moves[7 * i + j];
                 if(IsLegalMove(from, rm))
                     legal_moves.emplace_back(rm);
+                else if(!m_board.IsInsideBounds(rm))
+                {
+                }
                 else
                 {
                     // encountered a first opponent piece
@@ -61,9 +68,10 @@ std::vector<Square> MoveValidator::GetLegalMoves(Square from) const
                         break;
                     }
                     break;
-                }
 
+                }
             }
+
     }
 
     return legal_moves;
@@ -75,7 +83,7 @@ std::vector<Square> MoveValidator::GetLegalMoves(Square from) const
 bool MoveValidator::IsLegalMove(Square from, Square to) const
 {
     // square is within the board
-    if(!m_board.IsInsideBounds(to))
+    if(!m_board.IsInsideBounds(to) || !m_board.IsInsideBounds(from))
         return false;
 
     const Piece from_piece = m_board.GetPiece(from);
@@ -111,26 +119,24 @@ bool MoveValidator::IsStalemate(Color color) const
 }
 
 
-/// GET VALID RAW (POSSIBLE) MOVES FROM A SQUARE
+/// GET RAW MOVES FROM A SQUARE
 std::vector<Square> MoveValidator::GetRawMoves(Square from) const
 {
     PieceType selected_piece = m_board.GetPiece(from).type;
     const std::vector<Square>& raw_moves = m_moveStorage.GetRawMovesOf(selected_piece);
 
-    std::vector<Square> valid_raw_moves;
-    valid_raw_moves.reserve(raw_moves.size() / 2 + 1);
+    std::vector<Square> rel_raw_moves;
+    rel_raw_moves.reserve(raw_moves.size());
 
     Square temp_raw_move;
     for(Square rm : raw_moves)
     {
         // change from relative to {0,0} to current "from" square
         temp_raw_move = { from.row + rm.row, from.col + rm.col };
-
-        if(m_board.IsInsideBounds(temp_raw_move))
-            valid_raw_moves.emplace_back(temp_raw_move);
+        rel_raw_moves.emplace_back(temp_raw_move);
     }
 
-    return valid_raw_moves;
+    return rel_raw_moves;
 }
 
 

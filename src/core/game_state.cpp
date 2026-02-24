@@ -8,10 +8,13 @@ GameState::GameState()
 }
 
 
-/// CHECKS IF DOING A MOVE IS VALID
-bool GameState::TryMove(Square from, Square to)
+/// DOES A MOVE ON BOARD
+void GameState::DoMove(Square from, Square to)
 {
-    return false;
+    m_board.MovePiece(from, to);
+    SetSelectedSquare(std::nullopt);
+    SetCachedLegalMoves({});
+    SwitchTurn();
 }
 
 
@@ -71,7 +74,7 @@ std::optional<Square> GameState::GetSelectedSquare() const
 
 
 /// GET THE PREVIOUSLY CACHED LEGAL MOVES 
-std::vector<Square> GameState::GetCachedLegalMoves() const
+const std::vector<Square>& GameState::GetCachedLegalMoves() const
 {
     return m_legalMoves;
 }

@@ -38,7 +38,7 @@ private:
 public:
     GameState();
 
-    bool TryMove(Square from, Square to);
+    void DoMove(Square from, Square to);
     void Reset();
 
     Color GetCurrentTurn() const;
@@ -48,7 +48,7 @@ public:
     const std::vector<Move>& GetMoveHistory() const;
     std::vector<Square> GetLegalMoves(Square from) const;
     std::optional<Square> GetSelectedSquare() const;
-    std::vector<Square> GetCachedLegalMoves() const;
+    const std::vector<Square>& GetCachedLegalMoves() const;
 
 
     void SetGameStatus(GameStatus status);
