@@ -63,7 +63,39 @@ bool MoveValidator::IsInCheck(Color color) const
 /// CHECKS IF CHECKMATE HAPPEND OF A CERTAIN COLOR
 bool MoveValidator::IsCheckmate(Color color) const
 {
-    return false;
+    Square king_square = FindKing(color);
+
+    if(IsInCheck(color))
+    {
+        for(int i = 0; i < 8; i++)
+        {
+            for(int j = 0; j < 8; j++)
+            {
+                Piece p = m_board.GetPiece({ i, j });
+                if(p.color != color)
+                    continue;
+
+                std::vector<Square> rm = GetRawMoves({ i,j });
+
+                for(Square& r : rm)
+                {
+                    Piece original_to_piece = m_board.GetPiece(r);
+                    m_board.MovePiece({ i,j }, r);
+                    if(!IsInCheck(color))
+                    {
+                        m_board.MovePiece(r, { i,j });
+                        m_board.SetPiece(r, original_to_piece);
+                        return false;
+                    }
+                    m_board.MovePiece(r, { i,j });
+                    m_board.SetPiece(r, original_to_piece);
+                }
+
+
+            }
+        }
+    }
+    return true;
 }
 
 

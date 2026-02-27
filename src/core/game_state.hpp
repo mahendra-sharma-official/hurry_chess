@@ -28,6 +28,7 @@ private:
     std::vector<Move> m_moveHistory;
     std::optional<Square> m_selected;
     std::vector<Square> m_legalMoves;
+    bool m_isPromotion;
 
 
 public:
@@ -45,6 +46,7 @@ public:
     std::vector<Square> GetLegalMoves(Square from) const;
     std::optional<Square> GetSelectedSquare() const;
     const std::vector<Square>& GetCachedLegalMoves() const;
+    bool IsPromotionOngoing() const;
 
 
     void SetGameStatus(GameStatus status);

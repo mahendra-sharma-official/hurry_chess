@@ -5,7 +5,6 @@ Game::Game()
     : m_window(), m_textures(), m_state()
     , m_renderer(Renderer(m_window, m_textures)), m_input(m_state, m_renderer)
 {
-
 }
 
 void Game::Init(sf::Vector2u windowSize, std::string windowTitle)
@@ -45,6 +44,7 @@ void Game::ProcessEvents()
 
 void Game::Update()
 {
+
 }
 
 void Game::Draw()

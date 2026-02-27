@@ -16,5 +16,6 @@ private:
     GameState& m_state;
     Renderer& m_renderer;
 
+    void HandleHUDClick(sf::Vector2i mousePos);
     void HandleClick(sf::Vector2i mousePos);
 };

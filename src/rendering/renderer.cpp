@@ -192,6 +192,9 @@ void Renderer::DrawBottomBar(const GameState& state)
     bar.setPosition(sf::Vector2f(0.f, PADDING + BOARD_SIZE));
     bar.setFillColor(sf::Color(30, 30, 30));
     m_window.draw(bar);
+
+    if(state.IsPromotionOngoing())
+        DrawPromotionBar(state);
 }
 
 
@@ -211,6 +214,34 @@ void Renderer::DrawSidePanels(const GameState& state)
     right.setPosition(sf::Vector2f(PADDING + BOARD_SIZE, PADDING));
     right.setFillColor(sf::Color(40, 40, 40));
     m_window.draw(right);
+}
+
+void Renderer::DrawPromotionBar(const GameState& state)
+{
+    const std::array<PieceType, 4> order = {
+        PieceType::KNIGHT, PieceType::BISHOP,
+        PieceType::ROOK, PieceType::QUEEN
+    };
+
+    Color promo_turn = state.GetCurrentTurn() == Color::WHITE ? Color::BLACK : Color::WHITE;
+
+    for(int i = 0; i < 4; i++)
+    {
+        Piece piece = { order[i], promo_turn };
+        sf::Sprite sprite(m_textures.GetTexture("pieces"));
+        sprite.setTextureRect(GetPieceTextureRect(piece));
+
+        sf::Vector2u spriteSize = m_textures.GetSpriteSize("pieces");
+        float scaleX = TILE_SIZE / spriteSize.x * SCALE_FACTOR;
+        float scaleY = TILE_SIZE / spriteSize.y * SCALE_FACTOR;
+        sprite.setScale(sf::Vector2f(scaleX, scaleY));
+        sprite.setOrigin({ spriteSize.x * 0.5f, spriteSize.y * 0.5f });
+        sprite.setPosition({ PADDING + TILE_SIZE * 0.5f + i * TILE_SIZE,
+                           PADDING + BOARD_SIZE });
+
+        m_window.draw(sprite);
+    }
+
 }
 
 

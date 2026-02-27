@@ -16,7 +16,6 @@ private:
     Renderer m_renderer;
     InputHandler m_input;
 
-
 public:
     Game();
     void Init(sf::Vector2u windowSize, std::string windowTitle);

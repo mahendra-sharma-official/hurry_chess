@@ -1,9 +1,10 @@
 #include "core/game_state.hpp"
+#include <iostream>
 
 /// CONSTRUCTOR
 GameState::GameState()
     : m_board(), m_validator(m_board, m_currentTurn, m_moveHistory), m_currentTurn(Color::WHITE)
-    , m_gameStatus(GameStatus::PLAYING), m_boardStatus(BoardStatus::NORMAL)
+    , m_gameStatus(GameStatus::PLAYING), m_boardStatus(BoardStatus::NORMAL), m_isPromotion(false)
 {
 }
 
@@ -20,12 +21,19 @@ void GameState::DoMove(Square from, Square to)
         // going to side and their not being a piece means it's en passant
         if(to.col != from.col && tpiece.type == PieceType::NONE)
             on = { from.row, to.col };
+
+        // promotion if reached last row
+        if((to.row == 0 && fpiece.color == Color::WHITE) ||
+           (to.row == 7 && fpiece.color == Color::BLACK))
+            m_isPromotion = true;
     }
 
+
     AddToMoveHistory({ from, to, on, m_board.GetPiece(from), m_board.GetPiece(to) });
-
-
     m_board.MovePiece(from, to);
+
+    // handles promotion separately
+
     SetSelectedSquare(std::nullopt);
     SetCachedLegalMoves({});
 }
@@ -112,6 +120,11 @@ const std::vector<Square>& GameState::GetCachedLegalMoves() const
     return m_legalMoves;
 }
 
+bool GameState::IsPromotionOngoing() const
+{
+    return m_isPromotion;
+}
+
 
 /// SET THE GAME'S STATUS 
 void GameState::SetGameStatus(GameStatus status)
@@ -155,5 +168,16 @@ void GameState::SwitchTurn()
 void GameState::UpdateStatus()
 {
     if(m_validator.IsInCheck(m_currentTurn))
+    {
+
         SetBoardStatus(m_currentTurn == Color::WHITE ? BoardStatus::WHITEINCHECK : BoardStatus::BLACKINCHECK);
+        std::cout << "Check : " << (m_currentTurn == Color::WHITE ? "White" : "Black") << std::endl;
+        if(m_validator.IsCheckmate(m_currentTurn))
+        {
+            SetBoardStatus(BoardStatus::CHEKMATE);
+            SetBoardStatus(m_currentTurn == Color::WHITE ? BoardStatus::BLACKWIN : BoardStatus::WHITEWIN);
+            std::cout << "Checkmate : " << (m_currentTurn == Color::WHITE ? "White" : "Black") << std::endl;
+        }
+    }
+
 }

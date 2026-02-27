@@ -25,6 +25,16 @@ void InputHandler::HandleEvent(const sf::Event& event)
 }
 
 
+void InputHandler::HandleHUDClick(sf::Vector2i mousePos)
+{
+    if(m_state.IsPromotionOngoing())
+    {
+        sf::Vector2f world = m_renderer.ScreenToWorld(mousePos);
+        
+
+    }
+}
+
 /// HANDLE CLICK (EVERYTHING RELATED TO CLICKING STARTS FROM HERE)
 void InputHandler::HandleClick(sf::Vector2i mousePos)
 {
@@ -32,6 +42,12 @@ void InputHandler::HandleClick(sf::Vector2i mousePos)
 
     // ignore clicks in HUD/padding area
     if(clicked.row == -1 || clicked.col == -1)
+    {
+        HandleHUDClick(mousePos);
+        return;
+    }
+
+    if(m_state.IsPromotionOngoing())
         return;
 
     // update selected square

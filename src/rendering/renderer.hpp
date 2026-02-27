@@ -16,10 +16,10 @@ public:
     Square ScreenToSquare(sf::Vector2i mousePos) const;
     sf::Vector2f ScreenToWorld(sf::Vector2i mousePos) const;
 
+
 private:
     sf::RenderWindow& m_window;
     TextureManager& m_textures;
-
     sf::View m_view;
 
     static constexpr float TILE_SIZE = 64.f;
@@ -45,6 +45,7 @@ private:
     void DrawTopBar(const GameState& state);
     void DrawBottomBar(const GameState& state);
     void DrawSidePanels(const GameState& state);
+    void DrawPromotionBar(const GameState& state);
 
     // helpers
     sf::Color GetTileColor(Square sq) const;
