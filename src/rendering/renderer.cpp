@@ -133,9 +133,9 @@ void Renderer::DrawHighlights(const std::vector<Square>& squares)
     for(const Square& sq : squares)
     {
         // small semi-transparent circle centered on the tile
-        float radius = TILE_SIZE * 0.18f;
+        float radius = TILE_SIZE * 0.20f;
         sf::CircleShape dot(radius);
-        dot.setFillColor(sf::Color(0, 0, 0, 80));
+        dot.setFillColor(HIGHLIGHT_COLOR);
 
         sf::FloatRect bounds = GetSquareBounds(sq);
         dot.setPosition(sf::Vector2f(
@@ -156,7 +156,7 @@ void Renderer::DrawSelectedSquare(std::optional<Square> selected)
 
     sf::RectangleShape highlight(sf::Vector2f(TILE_SIZE, TILE_SIZE));
     highlight.setPosition(GetSquareBounds(*selected).position);
-    highlight.setFillColor(sf::Color(255, 255, 0, 100)); // yellow tint
+    highlight.setFillColor(SELECT_COLOR); // yellow tint
 
     m_window.draw(highlight);
 }

@@ -29,6 +29,9 @@ private:
     static constexpr float SCALE_FACTOR = 0.95;
     static constexpr sf::Color LIGHT_COLOR = sf::Color(240, 217, 181);
     static constexpr sf::Color DARK_COLOR = sf::Color(181, 136, 99);
+    static constexpr sf::Color HIGHLIGHT_COLOR = sf::Color(0, 0, 0, 80);
+    static constexpr sf::Color SELECT_COLOR = sf::Color(255, 255, 0, 100);
+
 
 
     // board drawing

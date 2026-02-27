@@ -15,11 +15,6 @@ enum class GameStatus
     PLAYING, PAUSING, ENDING
 };
 
-struct Move
-{
-    Square from, to;
-    Piece captured;
-};
 
 class GameState
 {
@@ -39,6 +34,7 @@ public:
     GameState();
 
     void DoMove(Square from, Square to);
+    void Undo();
     void Reset();
 
     Color GetCurrentTurn() const;
@@ -52,8 +48,10 @@ public:
 
 
     void SetGameStatus(GameStatus status);
+    void SetBoardStatus(BoardStatus status);
     void SetCachedLegalMoves(std::vector<Square> moves);
     void SetSelectedSquare(std::optional<Square> selected);
+    void AddToMoveHistory(Move move);
 
     void SwitchTurn();
     void UpdateStatus();

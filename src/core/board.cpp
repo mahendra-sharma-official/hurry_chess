@@ -47,6 +47,11 @@ bool Board::IsInsideBounds(Square sq) const
     return is_inside_row && is_inside_col;
 }
 
+std::array<std::array<Piece, 8>, 8> Board::GetGrid() const
+{
+    return m_grid;
+}
+
 
 /// PLACE THE BOARD PIECES TO STARTING POSITION 
 void Board::PlaceStartingPieces()

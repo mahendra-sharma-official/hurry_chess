@@ -17,6 +17,11 @@ void InputHandler::HandleEvent(const sf::Event& event)
         if(mousePressed->button == sf::Mouse::Button::Left)
             HandleClick({ mousePressed->position.x, mousePressed->position.y });
     }
+    else if(const auto* keyPressed = event.getIf<sf::Event::KeyReleased>())
+    {
+        if(keyPressed->code == sf::Keyboard::Key::U)
+            m_state.Undo();
+    }
 }
 
 
@@ -92,6 +97,7 @@ void InputHandler::HandleSelection(Square clicked)
         {
             m_state.DoMove(from, lm);
             m_state.SwitchTurn();
+            m_state.UpdateStatus();
             break;
         }
     }

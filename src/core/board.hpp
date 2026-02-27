@@ -14,6 +14,7 @@ public:
     void SetPiece(Square sq, Piece piece);
     void MovePiece(Square from, Square to);
     bool IsInsideBounds(Square sq) const;
+    std::array<std::array<Piece, 8>, 8> GetGrid() const;
 
 private:
     std::array<std::array<Piece, 8>, 8> m_grid;
