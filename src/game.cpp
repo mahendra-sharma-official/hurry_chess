@@ -10,6 +10,7 @@ Game::Game()
 void Game::Init(sf::Vector2u windowSize, std::string windowTitle)
 {
     m_window = sf::RenderWindow(sf::VideoMode(windowSize), windowTitle);
+    m_window.setFramerateLimit(60);
     m_renderer.UpdateViews(m_window.getSize());
     LoadAssets();
 }

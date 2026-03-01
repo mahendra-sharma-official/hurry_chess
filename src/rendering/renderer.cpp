@@ -71,6 +71,26 @@ Square Renderer::ScreenToSquare(sf::Vector2i mousePos) const
     return { row, col };
 }
 
+Square Renderer::ScreenToSquareHUD(sf::Vector2i mousePos) const
+{
+    sf::Vector2f world = ScreenToWorld(mousePos);
+
+    // check if click is outside board area 
+    if(world.x < PADDING ||
+       world.y < PADDING ||
+       world.x >= PADDING + BOARD_SIZE ||
+       world.y >= PADDING + BOARD_SIZE
+       )
+    {
+        int col = static_cast<int>((world.x) / TILE_SIZE);
+        int row = static_cast<int>((world.y) / TILE_SIZE);
+
+        return { row, col };
+    }
+
+    return { -1, -1 };
+}
+
 
 /// CONVERTS MOUSE SCREEN COORDINATES TO WORLD(VIEW) COORDINATES
 sf::Vector2f Renderer::ScreenToWorld(sf::Vector2i mousePos) const
@@ -180,6 +200,55 @@ void Renderer::DrawTopBar(const GameState& state)
     bar.setPosition(sf::Vector2f(0.f, 0.f));
     bar.setFillColor(sf::Color(30, 30, 30));
     m_window.draw(bar);
+
+
+    // Current turn text
+    std::string curT = std::string((state.GetCurrentTurn() == Color::WHITE ? "White\n" : "Black\n"));
+    std::string sts;
+    switch(state.GetBoardStatus())
+    {
+    case BoardStatus::NORMAL:
+        sts = "Normal\n";
+        break;
+    case BoardStatus::WHITEINCHECK:
+        sts = "White in check\n";
+        break;
+    case BoardStatus::WHITEWIN:
+        sts = "White won\n";
+        break;
+    case BoardStatus::BLACKINCHECK:
+        sts = "Black in check\n";
+        break;
+    case BoardStatus::BLACKWIN:
+        sts = "Black won\n";
+        break;
+    case BoardStatus::STALEMATE:
+        sts = "Stalemate\n";
+        break;
+    }
+    std::string status_txt = std::string("Turn : ") + curT
+        + std::string("Status: ") + sts;
+
+    sf::Text txt_status(TXT_FONT, status_txt);
+    txt_status.setCharacterSize(26);
+    txt_status.setPosition({ 0, 0 });
+
+    std::string tool_tip_txt1 = std::string("Undo : U\n")
+        + std::string("Reset : R");
+    sf::Text txt_toop_tip1(TXT_FONT, tool_tip_txt1);
+    txt_toop_tip1.setCharacterSize(26);
+    txt_toop_tip1.setPosition({ 300, 0 });
+
+    std::string tool_tip_txt2 = std::string("Do Something : B\n")
+        + std::string("Switch Turn : S");
+    sf::Text txt_toop_tip2(TXT_FONT, tool_tip_txt2);
+    txt_toop_tip2.setCharacterSize(26);
+    txt_toop_tip2.setPosition({ 400, 0 });
+
+    m_window.draw(txt_status);
+    m_window.draw(txt_toop_tip1);
+    m_window.draw(txt_toop_tip2);
+
 }
 
 
@@ -208,22 +277,90 @@ void Renderer::DrawSidePanels(const GameState& state)
     left.setFillColor(sf::Color(40, 40, 40));
     m_window.draw(left);
 
+    // captured pieces of white here
+    const std::vector<PieceType>& captured_whites = state.GetCapturedPieces(Color::WHITE);
+    int i = 0, j = 0;
+    for(const PieceType& p : captured_whites)
+    {
+        Piece piece = { p, Color::WHITE };
+        sf::Sprite sprite(m_textures.GetTexture("pieces"));
+        sprite.setTextureRect(GetPieceTextureRect(piece));
+
+        // it will be half of normal sprite for now
+        sf::Vector2f spriteSize = static_cast<sf::Vector2f>(m_textures.GetSpriteSize("pieces"));
+        float scaleX = TILE_SIZE / spriteSize.x * SCALE_FACTOR * 0.5f;
+        float scaleY = TILE_SIZE / spriteSize.y * SCALE_FACTOR * 0.5f;
+        sprite.setScale(sf::Vector2f(scaleX, scaleY));
+
+        sf::Vector2f pos;
+        if(piece.type == PieceType::PAWN)
+        {
+            pos = { 0,spriteSize.y * 0.5f + i * spriteSize.y * 0.5f + PADDING };
+            i++;
+        }
+        else
+        {
+            pos = { spriteSize.x * 0.5f, spriteSize.y * 0.5f + j * spriteSize.y * 0.5f + PADDING };
+            j++;
+        }
+
+        sprite.setPosition(pos);
+        m_window.draw(sprite);
+    }
+
     // right panel: x: PADDING+BOARD_SIZE–VIRTUAL_SIZE, y: PADDING–PADDING+BOARD_SIZE
     // placeholder background (WILL BE REPLACED BY SOMETHING)
     sf::RectangleShape right(sf::Vector2f(PADDING, BOARD_SIZE));
     right.setPosition(sf::Vector2f(PADDING + BOARD_SIZE, PADDING));
     right.setFillColor(sf::Color(40, 40, 40));
     m_window.draw(right);
+
+    // captured pieces of black here
+    const std::vector<PieceType>& captured_blacks = state.GetCapturedPieces(Color::BLACK);
+    i = 0; j = 0;
+    for(const PieceType& p : captured_blacks)
+    {
+        Piece piece = { p, Color::BLACK };
+        sf::Sprite sprite(m_textures.GetTexture("pieces"));
+        sprite.setTextureRect(GetPieceTextureRect(piece));
+
+        // it will be half of normal sprite for now
+        sf::Vector2f spriteSize = static_cast<sf::Vector2f>(m_textures.GetSpriteSize("pieces"));
+        float scaleX = TILE_SIZE / spriteSize.x * SCALE_FACTOR * 0.5f;
+        float scaleY = TILE_SIZE / spriteSize.y * SCALE_FACTOR * 0.5f;
+        sprite.setScale(sf::Vector2f(scaleX, scaleY));
+
+        sf::Vector2f pos;
+        if(piece.type == PieceType::PAWN)
+        {
+            pos = { PADDING + BOARD_SIZE,spriteSize.y * 0.5f + i * spriteSize.y * 0.5f + PADDING };
+            i++;
+        }
+        else
+        {
+            pos = { PADDING + BOARD_SIZE + spriteSize.x * 0.5f, spriteSize.y * 0.5f + j * spriteSize.y * 0.5f + PADDING };
+            j++;
+        }
+
+        sprite.setPosition(pos);
+        m_window.draw(sprite);
+    }
 }
 
 void Renderer::DrawPromotionBar(const GameState& state)
 {
     const std::array<PieceType, 4> order = {
-        PieceType::KNIGHT, PieceType::BISHOP,
-        PieceType::ROOK, PieceType::QUEEN
+        PieceType::ROOK, PieceType::KNIGHT,
+        PieceType::BISHOP, PieceType::QUEEN
     };
 
     Color promo_turn = state.GetCurrentTurn() == Color::WHITE ? Color::BLACK : Color::WHITE;
+
+    sf::RectangleShape bar(sf::Vector2f(4 * TILE_SIZE, PADDING));
+    bar.setPosition(sf::Vector2f(PADDING, PADDING + BOARD_SIZE));
+    bar.setFillColor(sf::Color(90, 90, 90));
+    m_window.draw(bar);
+
 
     for(int i = 0; i < 4; i++)
     {
@@ -237,7 +374,7 @@ void Renderer::DrawPromotionBar(const GameState& state)
         sprite.setScale(sf::Vector2f(scaleX, scaleY));
         sprite.setOrigin({ spriteSize.x * 0.5f, spriteSize.y * 0.5f });
         sprite.setPosition({ PADDING + TILE_SIZE * 0.5f + i * TILE_SIZE,
-                           PADDING + BOARD_SIZE });
+                           PADDING + BOARD_SIZE + TILE_SIZE * 0.5f });
 
         m_window.draw(sprite);
     }

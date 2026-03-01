@@ -18,4 +18,11 @@ private:
 
     void HandleHUDClick(sf::Vector2i mousePos);
     void HandleClick(sf::Vector2i mousePos);
+
+    // helpers for hud clicking
+    void HandleTopHUDClick(Square clicked);
+    void HandleLeftHUDClick(Square clicked);
+    void HandleRightHUDClick(Square clicked);
+    void HandleBottomHUDClick(Square clicked);
+    int SquareToHUDPart(Square clicked);
 };

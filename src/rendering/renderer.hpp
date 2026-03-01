@@ -14,6 +14,7 @@ public:
 
     // coordinate conversion
     Square ScreenToSquare(sf::Vector2i mousePos) const;
+    Square ScreenToSquareHUD(sf::Vector2i mousePos) const;
     sf::Vector2f ScreenToWorld(sf::Vector2i mousePos) const;
 
 
@@ -31,6 +32,8 @@ private:
     static constexpr sf::Color DARK_COLOR = sf::Color(181, 136, 99);
     static constexpr sf::Color HIGHLIGHT_COLOR = sf::Color(0, 0, 0, 80);
     static constexpr sf::Color SELECT_COLOR = sf::Color(255, 255, 0, 100);
+    const std::string FONT_PATH = "assets/fonts/craftycandy.otf";
+    const sf::Font TXT_FONT = sf::Font(FONT_PATH);
 
 
 

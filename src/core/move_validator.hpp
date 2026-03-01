@@ -33,7 +33,6 @@ private:
     std::vector<Square> GetRawMoves(Square from) const;
     bool IsBlockingCheck(Square from, Square to) const;
     bool DoesLeaveKingInCheck(Square from, Square to) const;
-    bool DoesKingGetInCheck(Square to) const;
     Square FindKing(Color color) const;
     std::vector<Square> GetLegalMovesOf(Piece piece, Square from) const;
     std::vector<Square> GetLegalPawnMoves(Piece piece, Square from) const;

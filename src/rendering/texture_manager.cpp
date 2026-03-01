@@ -11,6 +11,7 @@ bool TextureManager::Load(const std::string& id, const std::string& filepath, sf
         return false;
 
     data.spriteSize = spriteSize;
+    data.texture.setSmooth(true);
     m_textures.emplace(id, std::move(data));
     return true;
 }

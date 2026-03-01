@@ -102,7 +102,23 @@ bool MoveValidator::IsCheckmate(Color color) const
 /// CHECKS IF STALEMATE HAPPEND OF A CERTAIN COLOR
 bool MoveValidator::IsStalemate(Color color) const
 {
-    return false;
+    if(IsInCheck(color))
+        return false;
+
+    for(int i = 0; i < 8; i++)
+    {
+        for(int j = 0; j < 8; j++)
+        {
+            Piece p = m_board.GetPiece({ i, j });
+            if(p.color != color)
+                continue;
+
+            if(GetLegalMoves({ i,j }).size() > 0)
+                return false;
+        }
+    }
+
+    return true;
 }
 
 
@@ -293,7 +309,7 @@ std::vector<Square> MoveValidator::GetLegalMovesOf(Piece piece, Square from) con
         legal_moves = GetLegalQueenMoves(piece, from);
         break;
     case PieceType::KING:
-        legal_moves = GetLegalKnightMoves(piece, from);
+        legal_moves = GetLegalKingMoves(piece, from);
         break;
     default:
         break;
@@ -402,6 +418,8 @@ std::vector<Square> MoveValidator::GetLegalRookMoves(Piece piece, Square from) c
         if(!DoesLeaveKingInCheck(from, vm))
             legal_moves.emplace_back(vm);
     }
+
+
     return legal_moves;
 }
 
@@ -433,6 +451,53 @@ std::vector<Square> MoveValidator::GetLegalKingMoves(Piece piece, Square from) c
     {
         if(!DoesLeaveKingInCheck(from, vm))
             legal_moves.emplace_back(vm);
+    }
+
+    // CASTLING
+    // check if king has never moved
+    bool king_moved = false;
+    for(const Move& m : m_moveHistory)
+        if(m.played.type == PieceType::KING && m.played.color == piece.color)
+            king_moved = true;
+
+    if(!king_moved && !IsInCheck(piece.color))
+    {
+        int rook_cols[] = { 0, 7 };
+        for(int rook_col : rook_cols)
+        {
+            Piece candidate = m_board.GetPiece({ from.row, rook_col });
+            if(candidate.type != PieceType::ROOK || candidate.color != piece.color)
+                continue;
+
+            // check if the castling rook hasn't moved
+            bool this_rook_moved = false;
+            for(const Move& m : m_moveHistory)
+                if(m.from.row == from.row && m.from.col == rook_col)
+                {
+                    this_rook_moved = true;
+                    break;
+                }
+            if(this_rook_moved) continue;
+
+            // check if path is clear between king and rook
+            int step = (rook_col > from.col) ? 1 : -1;
+            bool path_clear = true;
+            for(int col = from.col + step; col != rook_col; col += step)
+                if(m_board.GetPiece({ from.row, col }).type != PieceType::NONE)
+                {
+                    path_clear = false;
+                    break;
+                }
+            if(!path_clear) continue;
+
+            // check if king can passes through and land on safe squares
+            Square king_pass = { from.row, from.col + step };
+            Square king_land = { from.row, from.col + step * 2 };
+
+            if(!DoesLeaveKingInCheck(from, king_pass) && !DoesLeaveKingInCheck(from, king_land))
+                legal_moves.emplace_back(king_land);
+        }
+
     }
     return legal_moves;
 }
