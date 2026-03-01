@@ -283,6 +283,8 @@ Square MoveValidator::FindKing(Color color) const
                && m_board.GetPiece({ i, j }).color == color)
                 return { i,j };
         }
+
+    return { -1, -1 };
 }
 
 

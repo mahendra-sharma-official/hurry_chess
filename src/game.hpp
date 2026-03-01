@@ -21,11 +21,11 @@ public:
     void Init(sf::Vector2u windowSize, std::string windowTitle);
     void Run();
 
+    bool LoadAssets();
 
 private:
     void ProcessEvents();
     void Update();
     void Draw();
 
-    bool LoadAssets();
 };

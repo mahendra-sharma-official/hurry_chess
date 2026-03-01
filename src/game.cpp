@@ -12,7 +12,6 @@ void Game::Init(sf::Vector2u windowSize, std::string windowTitle)
     m_window = sf::RenderWindow(sf::VideoMode(windowSize), windowTitle);
     m_window.setFramerateLimit(60);
     m_renderer.UpdateViews(m_window.getSize());
-    LoadAssets();
 }
 
 void Game::Run()
@@ -56,6 +55,6 @@ void Game::Draw()
 bool Game::LoadAssets()
 {
     if(m_textures.Load("pieces", "assets/textures/pieces.png", { 64,64 }))
-        std::cout << "Loaded pieces successfully" << std::endl;
+        return true;
     return false;
 }
